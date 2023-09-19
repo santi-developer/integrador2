@@ -41,8 +41,6 @@ def verificar_datos_incorrectos(df, columna, tipo_deseado):
         print(f"Todos los datos en la columna '{columna}' son del tipo {tipo_deseado}.")
     except ValueError:
         print(f"Datos incorrectos en la columna '{columna}' (no son del tipo {tipo_deseado}).")
-
-
        
        
 dataset=cargar_dataset()
