@@ -1,6 +1,7 @@
 from datasets import load_dataset
 import pandas as pd
 import numpy as np
+import requests
 
 def cargar_dataset():
     dataset = load_dataset("mstz/heart_failure")
@@ -41,16 +42,27 @@ def verificar_datos_incorrectos(df, columna, tipo_deseado):
         print(f"Todos los datos en la columna '{columna}' son del tipo {tipo_deseado}.")
     except ValueError:
         print(f"Datos incorrectos en la columna '{columna}' (no son del tipo {tipo_deseado}).")
-
-
-       
-       
+        
+def obtener_csv(direccion,nombre_archivo):
+    solicitud=requests.get(direccion)
+    
+    if solicitud.status_code==200:
+        with open(nombre_archivo,'wb') as archivo:
+             archivo.write(solicitud.content)
+        print("los datos se descargaron")
+    else:
+        print("no se puede descargar los datos")        
+            
+                  
 dataset=cargar_dataset()
 df=convertir_dataset(dataset)
 difuntos,aunvivos=separar_dtframe(df)
 imprimir_promedios(difuntos,aunvivos)
 verificar_datos_incorrectos(df, 'is_male', bool)  
 cant_fumador_genero(df)
+direccion='https://huggingface.co/datasets/mstz/heart_failure/raw/main/heart_failure_clinical_records_dataset.csv'
+nombre_archivo="datos.csv"
+obtener_csv(direccion,nombre_archivo)
 
 
     
