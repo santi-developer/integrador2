@@ -2,8 +2,11 @@ from datasets import load_dataset
 import pandas as pd
 import numpy as np
 import requests
+import sys
+
 
 def cargar_dataset():
+    
     dataset = load_dataset("mstz/heart_failure")
     data = dataset['train']
     return data
@@ -43,12 +46,19 @@ def verificar_datos_incorrectos(df, columna, tipo_deseado):
     except ValueError:
         print(f"Datos incorrectos en la columna '{columna}' (no son del tipo {tipo_deseado}).")
         
+        
 def obtener_csv(direccion,nombre_archivo):
     solicitud=requests.get(direccion)
     
     if solicitud.status_code==200:
-        with open(nombre_archivo,'wb') as archivo:
-             archivo.write(solicitud.content)
+        with open(nombre_archivo,'w',encoding='utf-8') as archivo:
+        
+            try:
+               contenido=solicitud.content.decode('utf-8') 
+               archivo.write(contenido)
+            except:
+                # Si la decodificación como UTF-8 falla, simplemente escribe los datos binarios
+                archivo.write(str(solicitud.content))
         print("los datos se descargaron")
     else:
         print("no se puede descargar los datos")  
@@ -97,6 +107,7 @@ def main():
     direccion = 'https://huggingface.co/datasets/mstz/heart_failure/raw/main/heart_failure_clinical_records_dataset.csv'
     nombre_archivo = "datos.csv"
     limpieza(obtener_csv(direccion, nombre_archivo))
+    print(sys.argv)
 
 if __name__ == "__main__":
     main()
