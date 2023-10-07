@@ -57,7 +57,6 @@ def obtener_csv(direccion,nombre_archivo):
                contenido=solicitud.content.decode('utf-8') 
                archivo.write(contenido)
             except:
-                # Si la decodificación como UTF-8 falla, simplemente escribe los datos binarios
                 archivo.write(str(solicitud.content))
         print("los datos se descargaron")
     else:
